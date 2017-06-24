@@ -1,0 +1,15 @@
+FROM fluent/fluentd:v0.14.18-onbuild
+RUN mkdir -p /var/log/td-agent/buffer && chown -R 1000:1000 /var/log/td-agent
+RUN apk add --update --virtual .build-deps \
+        sudo build-base ruby-dev \
+ && sudo gem install \
+        fluent-plugin-elasticsearch \
+        fluent-plugin-filter \
+        fluent-plugin-forest \
+        fluent-plugin-config-expander \
+        fluent-plugin-typecast \
+        fluent-plugin-parser \
+ && sudo gem sources --clear-all \
+ && apk del .build-deps \
+ && rm -rf /var/cache/apk/* \
+           /home/fluent/.gem/ruby/2.3.0/cache/*.gem
